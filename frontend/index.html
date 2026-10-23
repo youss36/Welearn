@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Learn CRM - Connexion</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-light: rgb(241, 208, 106);
+            --gold: rgb(212, 175, 55);
+            --gold-dark: rgb(196, 148, 72);
+            --teal: rgb(9, 107, 120);
+            --teal-dark: rgb(0, 55, 60);
+            --teal-mid: rgb(1, 74, 78);
+            --navy: rgb(9, 36, 58);
+            --white: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --shadow: 0 8px 32px rgba(9, 36, 58, 0.10);
+            --shadow-lg: 0 20px 60px rgba(9, 36, 58, 0.18);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--teal-dark) 50%, var(--teal) 100%);
+            color: var(--text);
+            font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: -50%;
+            right: -50%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(241, 208, 106, 0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            bottom: -40%;
+            left: -30%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .login-box {
+            width: min(420px, calc(100vw - 32px));
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 40px 32px 32px;
+            position: relative;
+            z-index: 1;
+        }
+        .login-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 32px;
+            right: 32px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-light), var(--gold), var(--gold-dark));
+            border-radius: 0 0 3px 3px;
+        }
+        .login-logo {
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        .login-logo h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--teal), var(--navy));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .login-logo span {
+            display: block;
+            margin-top: 4px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .login-logo .crm-badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 3px 14px;
+            border-radius: 999px;
+            background: rgba(9, 107, 120, 0.06);
+            color: var(--teal);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .login-divider {
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px solid #f1f3f5;
+        }
+        label {
+            display: block;
+            margin: 16px 0 6px;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text);
+        }
+        .input-wrap {
+            position: relative;
+        }
+        .input-wrap input {
+            width: 100%;
+            border: 1.5px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            font-size: 14px;
+            transition: var(--transition);
+            background: #fafbfc;
+            color: var(--text);
+        }
+        .input-wrap input:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(9, 107, 120, 0.08);
+            background: var(--white);
+        }
+        .input-wrap input::placeholder {
+            color: #94a3b8;
+        }
+        button {
+            width: 100%;
+            margin-top: 24px;
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--navy);
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 14px;
+            transition: var(--transition);
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.25);
+            letter-spacing: 0.3px;
+        }
+        button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(212, 175, 55, 0.35);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .error {
+            display: none;
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: rgba(196, 148, 72, 0.08);
+            border: 1px solid rgba(196, 148, 72, 0.2);
+            border-radius: var(--radius-sm);
+            color: var(--gold-dark);
+            text-align: center;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .hint {
+            margin-top: 20px;
+            padding: 14px 16px;
+            background: rgba(9, 107, 120, 0.04);
+            border: 1px solid rgba(9, 107, 120, 0.1);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+        .hint strong {
+            color: var(--teal);
+        }
+        @media (max-width: 480px) {
+            .login-box { padding: 28px 20px 24px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="login-box">
+        <div class="login-logo">
+            <img src="logo.svg" alt="We Learn Consulting" style="width:150px;display:block;margin:0 auto 10px">
+            <span>CRM - Gestion des inscriptions</span>
+            <div class="crm-badge">Espace prive</div>
+        </div>
+        <hr class="login-divider">
+
+        <label for="email">Email</label>
+        <div class="input-wrap">
+            <input type="email" id="email" placeholder="admin@welearn.com" autocomplete="email" required>
+        </div>
+
+        <label for="password">Mot de passe</label>
+        <div class="input-wrap">
+            <input type="password" id="password" placeholder="Entrez votre mot de passe" autocomplete="current-password" required>
+        </div>
+
+        <button id="login-btn" type="button">Se connecter</button>
+        <div id="error-msg" class="error"></div>
+
+        <div class="hint">
+            <strong>Demo:</strong> admin@welearn.com / admin123
+        </div>
+    </main>
+
+    <script src="login.js"></script>
+</body>
+</html>

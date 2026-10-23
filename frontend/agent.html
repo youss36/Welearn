@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Learn - Agent Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-light: rgb(241, 208, 106);
+            --gold: rgb(212, 175, 55);
+            --gold-dark: rgb(196, 148, 72);
+            --teal: rgb(9, 107, 120);
+            --teal-dark: rgb(0, 55, 60);
+            --teal-mid: rgb(1, 74, 78);
+            --navy: rgb(9, 36, 58);
+            --white: #ffffff;
+            --bg: #f0f2f5;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --shadow: 0 4px 24px rgba(9, 36, 58, 0.08);
+            --shadow-lg: 0 12px 40px rgba(9, 36, 58, 0.14);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+        }
+        button, input, select, textarea { font: inherit; }
+
+        .sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--navy) 0%, var(--teal-dark) 100%);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            box-shadow: 4px 0 20px rgba(9, 36, 58, 0.15);
+        }
+        .brand {
+            padding: 28px 20px 24px;
+            border-bottom: 1px solid rgba(241, 208, 106, 0.15);
+            margin-bottom: 8px;
+        }
+        .brand h1 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .brand span {
+            display: block;
+            margin-top: 4px;
+            color: rgba(241, 208, 106, 0.6);
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .menu-btn {
+            width: 100%;
+            border: 0;
+            border-left: 3px solid transparent;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.65);
+            cursor: pointer;
+            padding: 13px 20px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+            position: relative;
+        }
+        .menu-btn::before {
+            content: "";
+            position: absolute;
+            inset: 4px 12px;
+            border-radius: var(--radius-sm);
+            z-index: -1;
+            transition: var(--transition);
+        }
+        .menu-btn:hover {
+            color: var(--gold-light);
+            background: rgba(241, 208, 106, 0.05);
+        }
+        .menu-btn.active {
+            border-left-color: var(--gold);
+            color: var(--gold-light);
+            background: rgba(241, 208, 106, 0.08);
+        }
+        .menu-btn.active::before {
+            background: rgba(241, 208, 106, 0.05);
+        }
+        .menu-icon {
+            margin-right: 10px;
+            font-size: 16px;
+            display: inline-block;
+            width: 20px;
+            text-align: center;
+        }
+        .logout-btn {
+            width: calc(100% - 32px);
+            margin: auto 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            padding: 11px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+        .logout-btn:hover {
+            background: rgba(196, 148, 72, 0.25);
+            border-color: var(--gold-dark);
+            color: var(--gold-light);
+        }
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            padding: 28px 32px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(9, 36, 58, 0.06);
+        }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .notif-btn {
+            position: relative;
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 50%;
+            background: var(--white);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            color: var(--navy);
+        }
+        .notif-btn:hover { box-shadow: var(--shadow-lg); }
+        .notif-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e74c3c;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .notif-badge.show { display: flex; }
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            padding: 8px 16px 8px 8px;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+        }
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--teal), var(--navy));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-light);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .profile-layout {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 0 20px;
+            border-top: 3px solid var(--teal);
+        }
+        .card-body {
+            padding: 20px;
+        }
+
+        .profile-card .card-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px 24px;
+        }
+        .profile-logo {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid var(--teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            overflow: hidden;
+            background: var(--white);
+        }
+        .profile-logo img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+        .profile-logo svg {
+            width: 50px;
+            height: 50px;
+            color: var(--teal);
+        }
+        .profile-name {
+            margin: 0 0 4px;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+        .profile-role {
+            margin: 0 0 18px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .profile-info {
+            width: 100%;
+            text-align: center;
+        }
+        .profile-info p {
+            margin: 6px 0;
+            font-size: 13px;
+            color: var(--text);
+        }
+        .profile-info p strong {
+            color: var(--navy);
+        }
+
+        .form-card .card-header {
+            display: flex;
+            align-items: center;
+            padding-top: 14px;
+        }
+        .form-card .card-header h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+        .form-card .card-body {
+            padding: 24px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .form-row:last-child {
+            margin-bottom: 0;
+        }
+        .form-row label {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--navy);
+            text-align: left;
+        }
+        .form-row input,
+        .form-row select {
+            width: 100%;
+            border: 1.5px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            background: var(--white);
+            color: var(--text);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        .form-row input:focus,
+        .form-row select:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(9, 107, 120, 0.1);
+        }
+
+        .file-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .file-input-wrap input[type="file"] {
+            font-size: 13px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+        }
+        .file-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .submit-btn {
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--white);
+            cursor: pointer;
+            padding: 11px 28px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+            margin-top: 8px;
+        }
+        .submit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--teal);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f1f3f5;
+        }
+
+        .doc-empty {
+            text-align: center;
+            padding: 30px 16px;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .doc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .doc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border: 1px solid #f1f3f5;
+            border-radius: var(--radius-sm);
+            background: #fafbfc;
+        }
+        .doc-item-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--navy);
+        }
+        .doc-item-type {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .doc-item-actions {
+            display: flex;
+            gap: 6px;
+        }
+        .doc-item-actions button {
+            border: 0;
+            border-radius: 6px;
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .doc-btn-download {
+            background: rgba(9, 107, 120, 0.08);
+            color: var(--teal);
+        }
+        .doc-btn-download:hover {
+            background: rgba(9, 107, 120, 0.15);
+        }
+        .doc-btn-delete {
+            background: rgba(231, 76, 60, 0.08);
+            color: #e74c3c;
+        }
+        .doc-btn-delete:hover {
+            background: rgba(231, 76, 60, 0.15);
+        }
+
+        .upload-form {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 16px;
+            padding: 14px;
+            background: rgba(9, 107, 120, 0.03);
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(9, 107, 120, 0.1);
+        }
+        .upload-form select {
+            width: 100%;
+            border: 1.5px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            padding: 9px 10px;
+            font-size: 13px;
+        }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 14px 24px;
+            border-radius: var(--radius-sm);
+            color: var(--white);
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            pointer-events: none;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast.success { background: #27ae60; }
+        .toast.error { background: #e74c3c; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(9, 36, 58, 0.15); border-radius: 3px; }
+
+        @media (max-width: 920px) {
+            body { display: block; }
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                height: auto;
+                position: static;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 10px 14px;
+                gap: 4px;
+            }
+            .brand { padding: 0; margin: 0; border: 0; flex: 1; }
+            .menu-btn { width: auto; border-left: 0; border-bottom: 2px solid transparent; padding: 8px 12px; font-size: 12px; }
+            .menu-btn.active { border-left: 0; border-bottom-color: var(--gold); }
+            .logout-btn { width: auto; margin: 0; padding: 8px 14px; }
+            .main-content { padding: 16px; max-height: none; }
+            .profile-layout { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .upload-form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="logo.svg" alt="We Learn Consulting" style="width:100px;display:block;margin:0 auto 8px">
+            <span style="display:block;text-align:center">Espace Agent</span>
+        </div>
+        <button class="menu-btn active" onclick="switchSection('profile-section', this)">
+            <span class="menu-icon">&#128100;</span> Profile
+        </button>
+        <button class="menu-btn" onclick="switchSection('universities-section', this)">
+            <span class="menu-icon">&#127891;</span> Universites
+        </button>
+        <button class="menu-btn" onclick="switchSection('programs-section', this)">
+            <span class="menu-icon">&#128218;</span> Programmes
+        </button>
+        <button class="menu-btn" onclick="switchSection('applications-section', this)">
+            <span class="menu-icon">&#128196;</span> Mes Candidatures
+        </button>
+        <button class="menu-btn" onclick="switchSection('students-section', this)">
+            <span class="menu-icon">&#127979;</span> Etudiants
+        </button>
+        <button class="logout-btn" id="logout-btn">Deconnexion</button>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div></div>
+            <div class="topbar-right">
+                <button class="notif-btn" title="Notifications">&#128276;</button>
+                <div class="user-badge">
+                    <div class="user-avatar" id="user-initial">W</div>
+                    <span id="user-name-small" style="font-size:13px;font-weight:600;color:var(--navy)"></span>
+                </div>
+            </div>
+        </header>
+
+        <section id="profile-section" class="app-section active">
+            <div class="profile-layout">
+                <div class="card profile-card">
+                    <div class="card-body">
+                        <div class="profile-logo" id="profile-logo">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                <path d="M6 12v5c3 3 6 3 12 0v-5"/>
+                            </svg>
+                        </div>
+                        <h2 class="profile-name" id="profile-display-name">WE LEARN</h2>
+                        <p class="profile-role">Agent</p>
+                        <div class="profile-info">
+                            <p><strong>Email:</strong> <span id="profile-display-email">-</span></p>
+                            <p><strong>Phone:</strong> <span id="profile-display-phone">-</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="card form-card" style="margin-bottom:24px">
+                        <div class="card-header">
+                            <h3>Basic Info</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <label>Agent Name</label>
+                                <input id="agent-name" type="text" placeholder="Agent Name">
+                            </div>
+                            <div class="form-row">
+                                <label>Country</label>
+                                <input id="agent-country" type="text" placeholder="Country">
+                            </div>
+                            <div class="form-row">
+                                <label>Address</label>
+                                <input id="agent-address" type="text" placeholder="Address">
+                            </div>
+                            <div class="form-row">
+                                <label>Password</label>
+                                <input id="agent-password" type="password" placeholder="Password">
+                            </div>
+                            <div class="form-row">
+                                <label>Confirm Password</label>
+                                <input id="agent-confirm-password" type="password" placeholder="Confirm password">
+                            </div>
+                            <div class="form-row">
+                                <label>Votre lien de formulaire</label>
+                                <div style="display:flex;gap:8px"><input id="account-link" type="text" readonly><button id="copy-account-link-btn" class="submit-btn" type="button" style="margin:0">Copier</button></div>
+                                <div style="text-align:center;margin-top:12px"><div id="account-qr"></div><button id="download-account-qr-btn" class="submit-btn" type="button" style="margin:8px 0 0">Telecharger le QR code</button></div>
+                            </div>
+                            <div class="form-row">
+                                <label>Logo</label>
+                                <div class="file-input-wrap">
+                                    <input id="agent-logo-file" type="file" accept="image/*">
+                                    <span class="file-label">Aucun fichier selectionne</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card form-card">
+                        <div class="card-header">
+                            <h3>Social Media</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-row">
+                                <label>Facebook</label>
+                                <input id="agent-facebook" type="text" placeholder="Facebook">
+                            </div>
+                            <div class="form-row">
+                                <label>Website</label>
+                                <input id="agent-website" type="text" placeholder="Website">
+                            </div>
+                            <div class="form-row">
+                                <label>Instagram</label>
+                                <input id="agent-instagram" type="text" placeholder="Instagram">
+                            </div>
+                            <div class="form-row">
+                                <label>Snapchat</label>
+                                <input id="agent-snapchat" type="text" placeholder="Snapchat">
+                            </div>
+                            <div style="text-align:left;margin-top:12px">
+                                <button class="submit-btn" id="save-profile-btn" type="button">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card form-card" style="margin-top:24px">
+                <div class="card-header">
+                    <h3>Documents</h3>
+                </div>
+                <div class="card-body">
+                    <div class="upload-form">
+                        <input id="doc-file" type="file">
+                        <select id="doc-type">
+                            <option value="Passeport">Passeport</option>
+                            <option value="Diplome">Diplome</option>
+                            <option value="Releve de notes">Releve de notes</option>
+                            <option value="CV">CV</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                        <button class="submit-btn" id="upload-doc-btn" type="button" style="margin-top:0">Uploader</button>
+                    </div>
+                    <div id="doc-list-container">
+                        <div class="doc-empty">No Data Yet</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="universities-section" class="app-section">
+            <div class="card form-card">
+                <div class="card-header"><h3>Universites</h3></div>
+                <div class="card-body"><p class="doc-empty">Bientot disponible</p></div>
+            </div>
+        </section>
+        <section id="programs-section" class="app-section">
+            <div class="card form-card">
+                <div class="card-header"><h3>Programmes</h3></div>
+                <div class="card-body"><p class="doc-empty">Bientot disponible</p></div>
+            </div>
+        </section>
+        <section id="applications-section" class="app-section">
+            <div class="card form-card">
+                <div class="card-header"><h3>Mes Candidatures</h3></div>
+                <div class="card-body"><p class="doc-empty">Bientot disponible</p></div>
+            </div>
+        </section>
+        <section id="students-section" class="app-section">
+            <div class="card form-card">
+                <div class="card-header"><h3>Etudiants</h3></div>
+                <div class="card-body"><p class="doc-empty">Bientot disponible</p></div>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="qrcode-local.js"></script>
+    <script src="agent.js"></script>
+</body>
+</html>

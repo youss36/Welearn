@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demande d'information | We Learn</title>
+    <style>
+        :root { --navy:#09243a; --teal:#096b78; --gold:#d4af37; --line:#dbe4e8; }
+        * { box-sizing:border-box; }
+        body { margin:0; min-height:100vh; font-family:Arial,sans-serif; color:var(--navy); background:linear-gradient(135deg,#edf5f5,#f9f7ef); padding:32px 16px; }
+        main { width:min(720px,100%); margin:auto; background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 20px 60px rgba(9,36,58,.14); }
+        header { padding:32px; text-align:center; background:var(--navy); color:#fff; }
+        header h1 { margin:0 0 8px; font-size:28px; } header p { margin:0; color:#dce9eb; }
+        form { padding:30px; } .grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+        label { display:block; margin-bottom:7px; font-size:13px; font-weight:700; } input,select,textarea { width:100%; border:1px solid var(--line); border-radius:8px; padding:12px; font:inherit; color:var(--navy); } textarea { min-height:110px; resize:vertical; }
+        .full { grid-column:1 / -1; } button { width:100%; border:0; border-radius:8px; padding:14px; background:var(--teal); color:#fff; font-weight:700; font-size:15px; cursor:pointer; } button:hover { background:#075963; } button:disabled { opacity:.6; cursor:wait; }
+        #message { display:none; margin:0 30px 30px; padding:14px; border-radius:8px; } #message.success { display:block; background:#e4f5ec; color:#17623b; } #message.error { display:block; background:#fce9e7; color:#a52d25; }
+        @media (max-width:560px) { body { padding:14px; } header,form { padding:24px 20px; } .grid { grid-template-columns:1fr; } .full { grid-column:auto; } }
+    </style>
+</head>
+<body>
+    <main>
+        <header><h1>Votre projet d'etudes commence ici</h1><p>Remplissez ce formulaire, notre equipe vous recontactera rapidement.</p></header>
+        <form id="lead-form">
+            <div class="grid">
+                <div><label for="first_name">Nom *</label><input id="first_name" required autocomplete="family-name"></div>
+                <div><label for="last_name">Prenom *</label><input id="last_name" required autocomplete="given-name"></div>
+                <div><label for="phone">Telephone *</label><input id="phone" type="tel" required autocomplete="tel"></div>
+                <div><label for="email">Email *</label><input id="email" type="email" required autocomplete="email"></div>
+                <div><label for="study_level">Niveau d'etudes</label><select id="study_level"><option value="">Selectionnez</option><option>Bac</option><option>Bac+2</option><option>Licence</option><option>Master</option><option>Doctorat</option><option>Autre</option></select></div>
+                <div><label for="speciality">Domaine souhaite</label><input id="speciality" placeholder="Ex: Informatique"></div>
+                <div class="full"><label for="desired_destination">Destination souhaitee</label><input id="desired_destination" placeholder="Ex: Allemagne, Turquie..."></div>
+                <div class="full"><label for="study_information">Informations sur vos etudes / message</label><textarea id="study_information" placeholder="Votre parcours, vos diplomes, vos questions ou toute information utile..."></textarea></div>
+                <div class="full"><button id="submit-btn" type="submit">Envoyer ma demande</button></div>
+            </div>
+        </form>
+        <div id="message"></div>
+    </main>
+    <script src="lead-form.js"></script>
+</body>
+</html>

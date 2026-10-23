@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Learn CRM - Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-light: rgb(241, 208, 106);
+            --gold: rgb(212, 175, 55);
+            --gold-dark: rgb(196, 148, 72);
+            --teal: rgb(9, 107, 120);
+            --teal-dark: rgb(0, 55, 60);
+            --teal-mid: rgb(1, 74, 78);
+            --navy: rgb(9, 36, 58);
+            --white: #ffffff;
+            --bg: #f0f2f5;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --shadow: 0 4px 24px rgba(9, 36, 58, 0.08);
+            --shadow-lg: 0 12px 40px rgba(9, 36, 58, 0.14);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+        }
+        button, input, select, textarea { font: inherit; }
+
+        .sidebar {
+            width: 270px;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--navy) 0%, var(--teal-dark) 100%);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            box-shadow: 4px 0 20px rgba(9, 36, 58, 0.15);
+        }
+        .brand {
+            padding: 32px 24px 28px;
+            border-bottom: 1px solid rgba(241, 208, 106, 0.15);
+            margin-bottom: 8px;
+        }
+        .brand h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .brand span {
+            display: block;
+            margin-top: 4px;
+            color: rgba(241, 208, 106, 0.6);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .menu-btn {
+            width: 100%;
+            border: 0;
+            border-left: 3px solid transparent;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.65);
+            cursor: pointer;
+            padding: 14px 24px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+            transition: var(--transition);
+            position: relative;
+        }
+        .menu-btn::before {
+            content: "";
+            position: absolute;
+            inset: 4px 12px;
+            border-radius: var(--radius-sm);
+            z-index: -1;
+            transition: var(--transition);
+        }
+        .menu-btn:hover {
+            color: var(--gold-light);
+            background: rgba(241, 208, 106, 0.05);
+        }
+        .menu-btn.active {
+            border-left-color: var(--gold);
+            color: var(--gold-light);
+            background: rgba(241, 208, 106, 0.08);
+        }
+        .menu-btn.active::before {
+            background: rgba(241, 208, 106, 0.05);
+        }
+        .logout-btn {
+            width: calc(100% - 32px);
+            margin: auto 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.04);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+        .logout-btn:hover {
+            background: rgba(196, 148, 72, 0.25);
+            border-color: var(--gold-dark);
+            color: var(--gold-light);
+        }
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            padding: 32px;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(9, 36, 58, 0.06);
+        }
+        .topbar h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--navy);
+        }
+        .topbar h2 span { color: var(--teal); }
+        .topbar p {
+            margin: 4px 0 0;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .notif-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border: 0;
+            border-radius: 50%;
+            background: var(--white);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            color: var(--navy);
+        }
+        .notif-btn:hover { box-shadow: var(--shadow-lg); }
+        .notif-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #e74c3c;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .notif-badge.show { display: flex; }
+        .notif-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            width: 360px;
+            max-height: 400px;
+            overflow-y: auto;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            z-index: 30;
+            padding: 8px 0;
+        }
+        .notif-dropdown.open { display: block; }
+        .notif-dropdown .notif-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f3f5;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--navy);
+        }
+        .notif-dropdown .notif-header button {
+            border: 0;
+            background: transparent;
+            color: var(--teal);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .notif-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f8f9fa;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .notif-item:hover { background: rgba(9, 107, 120, 0.03); }
+        .notif-item.unread { border-left: 3px solid var(--gold); background: rgba(241, 208, 106, 0.04); }
+        .notif-item .notif-title { font-size: 13px; font-weight: 600; color: var(--navy); }
+        .notif-item .notif-msg { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .notif-item .notif-time { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+        .notif-empty { padding: 24px; text-align: center; color: var(--text-muted); font-size: 13px; }
+        .notif-wrapper {
+            position: relative;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            padding: 8px 16px 8px 8px;
+            border-radius: 50px;
+            box-shadow: var(--shadow);
+        }
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--teal), var(--navy));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold-light);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .kpi {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+        .kpi:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        .kpi::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-light), var(--gold), var(--gold-dark));
+        }
+        .kpi span {
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .kpi strong {
+            display: block;
+            margin-top: 8px;
+            color: var(--navy);
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .app-section { display: none; }
+        .app-section.active { display: block; }
+
+        .section-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .section-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 24px;
+            right: 24px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--teal), var(--gold), var(--teal));
+            border-radius: 0 0 2px 2px;
+        }
+        h3 {
+            margin: 0 0 20px;
+            color: var(--navy);
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        input, select, textarea {
+            width: 100%;
+            border: 1.5px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            background: var(--white);
+            color: var(--text);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(9, 107, 120, 0.1);
+        }
+        textarea { min-height: 80px; resize: vertical; }
+        .full-row { grid-column: 1 / -1; }
+
+        .form-btn {
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: var(--navy);
+            cursor: pointer;
+            padding: 12px 22px;
+            font-weight: 700;
+            font-size: 14px;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+        }
+        .form-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+        }
+        .form-btn:active {
+            transform: translateY(0);
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: var(--radius-sm);
+            border: 1px solid #f1f3f5;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f1f3f5;
+            text-align: left;
+            vertical-align: top;
+            font-size: 13px;
+        }
+        th {
+            background: var(--navy);
+            color: var(--white);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        tr:last-child td { border-bottom: 0; }
+        tr:hover td { background: rgba(9, 107, 120, 0.02); }
+        td select {
+            padding: 6px 8px;
+            font-size: 12px;
+            border-radius: 6px;
+            border-color: #d1d5db;
+            background: #f9fafb;
+            cursor: pointer;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: 2fr repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .filters select, .filters input {
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+
+        .section-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .danger-btn {
+            border: 1px solid rgba(196, 148, 72, 0.3);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--gold-dark);
+            cursor: pointer;
+            padding: 10px 16px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+        .danger-btn:hover {
+            background: rgba(196, 148, 72, 0.08);
+            border-color: var(--gold-dark);
+        }
+
+        .uni-form {
+            display: none;
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid rgba(9, 107, 120, 0.12);
+            border-radius: var(--radius);
+            background: rgba(9, 107, 120, 0.02);
+        }
+        .uni-form.active { display: block; }
+        .uni-form input[type="checkbox"] {
+            width: auto;
+            margin-right: 6px;
+            accent-color: var(--teal);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        #universities-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .uni-card {
+            background: var(--white);
+            border: 1px solid #f1f3f5;
+            border-radius: var(--radius);
+            padding: 14px 22px;
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        .uni-card-logo {
+            width: 58px;
+            height: 58px;
+            flex-shrink: 0;
+            border-radius: 14px;
+            border: 1px solid #eef1f4;
+            background: var(--white);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .uni-card-logo img { max-width: 82%; max-height: 82%; object-fit: contain; }
+        .uni-card-main {
+            flex: 1.6;
+            min-width: 200px;
+        }
+        .uni-card-meta {
+            flex: 1;
+            min-width: 180px;
+            border-left: 1px solid #eef1f4;
+            padding-left: 24px;
+        }
+        .uni-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+        .uni-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: var(--gold-light);
+        }
+        .uni-card h4 {
+            margin: 0 0 6px;
+            color: var(--navy);
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .uni-card p {
+            margin: 6px 0;
+            color: var(--text);
+            font-size: 13px;
+        }
+        .uni-card p strong {
+            color: var(--teal);
+            font-weight: 600;
+        }
+        .badge {
+            display: inline-block;
+            margin: 4px 4px 0 0;
+            border-radius: 999px;
+            background: rgba(9, 107, 120, 0.06);
+            color: var(--teal);
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .badge.gold {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-dark);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            align-items: center;
+            justify-content: center;
+            background: rgba(9, 36, 58, 0.55);
+            padding: 20px;
+            backdrop-filter: blur(6px);
+        }
+        .modal-content {
+            width: min(720px, 100%);
+            max-height: 86vh;
+            overflow-y: auto;
+            border-radius: var(--radius);
+            background: var(--white);
+            padding: 28px;
+            position: relative;
+            box-shadow: 0 24px 64px rgba(9, 36, 58, 0.2);
+        }
+        .modal-content h3 {
+            font-size: 20px;
+            color: var(--navy);
+            margin-bottom: 16px;
+        }
+        .modal-content p {
+            margin: 8px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .modal-content p strong {
+            color: var(--teal);
+        }
+        .close-modal {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 24px;
+            transition: var(--transition);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .close-modal:hover {
+            background: rgba(9, 36, 58, 0.05);
+            color: var(--navy);
+        }
+        .modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:24px; }
+        .modal-actions .form-btn, .modal-actions .danger-btn { width:auto; }
+        .qr-card { margin-top:18px; padding:16px; border:1px solid #edf0f2; border-radius:10px; text-align:center; background:#fff; }
+        .qr-card canvas { display:block; width:160px; height:160px; margin:10px auto; }
+        .status-options { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:18px 0; }
+        .status-option { cursor:pointer; }
+        .status-option input { display:none; }
+        .status-option-card { border:1.5px solid #e6e9ee; border-radius:14px; padding:18px 14px; text-align:center; background:#fff; transition:var(--transition); position:relative; }
+        .status-option-card .icon { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 10px; font-size:20px; }
+        .status-option-card .icon.email { background:rgba(9,107,120,0.08); color:var(--teal); }
+        .status-option-card .icon.whatsapp { background:rgba(37,211,102,0.12); color:#25D366; }
+        .status-option-card .title { font-weight:700; color:var(--navy); font-size:14px; }
+        .status-option-card .sub { font-size:12px; color:var(--text-muted); margin-top:4px; }
+        .status-option:has(input:checked) .status-option-card { border-color:var(--gold); background:linear-gradient(180deg,#fff,#fff9e6); box-shadow:0 6px 18px rgba(212,175,55,0.18); }
+        .status-option:has(input:checked) .status-option-card::after { content:"✓"; position:absolute; top:8px; right:8px; width:20px; height:20px; border-radius:50%; background:var(--gold); color:#fff; font-size:12px; display:flex; align-items:center; justify-content:center; }
+        .status-option-card:hover { border-color:var(--teal); transform:translateY(-1px); }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(9, 36, 58, 0.15); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(9, 36, 58, 0.25); }
+
+        .app-status-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .app-status-btn {
+            border: none;
+            border-radius: 20px;
+            padding: 7px 14px;
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0.85;
+        }
+        .app-status-btn:hover { opacity: 1; transform: translateY(-1px); }
+        .app-status-btn.active { opacity: 1; box-shadow: 0 2px 12px rgba(0,0,0,0.2); transform: translateY(-1px); }
+        .app-status-btn[data-c="total"] { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); }
+        .app-status-btn[data-c="gray"] { background: #94a3b8; }
+        .app-status-btn[data-c="teal"] { background: #36c6d3; }
+        .app-status-btn[data-c="blue"] { background: #3b82f6; }
+        .app-status-btn[data-c="green"] { background: #22c55e; }
+        .app-status-btn[data-c="red"] { background: #ef4444; }
+        .app-status-btn[data-c="darkred"] { background: #7f1d1d; }
+
+        .app-toolbar {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .app-toolbar input[type="search"] {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition);
+        }
+        .app-toolbar input[type="search"]:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.15); }
+        .app-count { color: var(--text-muted); font-size: 13px; font-weight: 600; white-space: nowrap; }
+        .app-add-btn {
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            color: var(--white);
+            cursor: pointer;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 13px;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .app-add-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(9,107,120,0.3); }
+
+        .apps-table { width: 100%; border-collapse: collapse; }
+        .apps-table th {
+            text-align: left;
+            padding: 10px 14px;
+            color: var(--teal);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e2e8f0;
+            white-space: nowrap;
+        }
+        .apps-table td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 13.5px;
+        }
+        .apps-table tr:hover td { background: rgba(241,208,106,0.06); }
+        .apps-table .app-id { font-weight: 700; color: var(--teal); }
+        .apps-table .app-student { font-weight: 600; color: var(--navy); }
+        .apps-table .app-date { color: var(--text-muted); font-size: 12px; white-space: nowrap; }
+
+        .app-status-badge {
+            display: inline-block;
+            padding: 3px 9px;
+            border-radius: 14px;
+            font-size: 10.5px;
+            font-weight: 700;
+            color: var(--white);
+            white-space: nowrap;
+        }
+        .app-status-badge.pending_review { background: #94a3b8; }
+        .app-status-badge.awaiting_conditional_acceptance, .app-status-badge.awaiting_payment,
+        .app-status-badge.awaiting_final_acceptance, .app-status-badge.awaiting_student_card { background: #36c6d3; }
+        .app-status-badge.conditional_acceptance, .app-status-badge.paid, .app-status-badge.free_scholarship { background: #3b82f6; }
+        .app-status-badge.final_acceptance, .app-status-badge.completed { background: #22c55e; }
+        .app-status-badge.invalid, .app-status-badge.refused { background: #ef4444; }
+        .app-status-badge.refund_request, .app-status-badge.refunded, .app-status-badge.freeze { background: #7f1d1d; }
+
+        .app-actions { display: flex; gap: 4px; }
+        .app-icon-btn {
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 5px 8px;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+        .app-icon-btn.app-edit { background: rgba(9,107,120,0.1); color: var(--teal); }
+        .app-icon-btn.app-edit:hover { background: rgba(9,107,120,0.2); }
+        .app-icon-btn.app-del { background: rgba(239,68,68,0.1); color: #ef4444; }
+        .app-icon-btn.app-del:hover { background: rgba(239,68,68,0.2); }
+
+        .app-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        .app-modal-overlay.open { display: flex; }
+        .app-modal {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 95%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .app-modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .app-modal-header h3 { margin: 0; font-size: 18px; color: var(--navy); }
+        .app-modal-close { border: none; background: none; font-size: 22px; cursor: pointer; color: var(--text-muted); padding: 4px; }
+        .app-modal-body { padding: 24px; }
+        .app-modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .app-form-group { margin-bottom: 16px; }
+        .app-form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+        }
+        .app-form-group input, .app-form-group select, .app-form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+        .app-form-group input:focus, .app-form-group select:focus, .app-form-group textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212,175,55,0.15);
+        }
+        .app-form-group textarea { resize: vertical; min-height: 65px; }
+        .app-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .app-save-btn {
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            color: var(--navy);
+            cursor: pointer;
+            padding: 10px 24px;
+            font-weight: 700;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+        .app-save-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(212,175,55,0.3); }
+        .app-cancel-btn {
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            background: var(--white);
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .app-cancel-btn:hover { background: #f8fafc; }
+        @media (max-width: 920px) {
+            body { display: block; }
+            .uni-card { flex-wrap: wrap; gap: 14px; }
+            .uni-card-meta { border-left: 0; padding-left: 0; flex-basis: 100%; }
+            .app-status-bar { gap: 6px; }
+            .app-form-row { grid-template-columns: 1fr !important; }
+            .sidebar {
+                width: 100%;
+                min-height: auto;
+                height: auto;
+                position: static;
+                flex-direction: row;
+                flex-wrap: wrap;
+                padding: 12px 16px;
+                gap: 4px;
+            }
+            .brand { padding: 0; margin: 0; border: 0; flex: 1; }
+            .brand::after { display: none; }
+            .menu-btn { width: auto; border-left: 0; border-bottom: 2px solid transparent; padding: 10px 14px; font-size: 13px; }
+            .menu-btn.active { border-left: 0; border-bottom-color: var(--gold); }
+            .logout-btn { width: auto; margin: 0; padding: 8px 16px; }
+            .main-content { padding: 20px; max-height: none; }
+            .filters { grid-template-columns: 1fr 1fr; }
+            .topbar { flex-direction: column; align-items: flex-start; gap: 12px; }
+        }
+        @media (max-width: 600px) {
+            .filters { grid-template-columns: 1fr; }
+            .kpi-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <img src="logo.svg" alt="We Learn Consulting" style="width:110px;display:block;margin:0 auto 8px">
+            <span style="display:block;text-align:center">Espace interne</span>
+        </div>
+        <button class="menu-btn active" onclick="switchSection('leads-section', this)">Leads</button>
+        <button class="menu-btn" onclick="switchSection('pipeline-section', this)">Pipeline</button>
+        <button class="menu-btn" onclick="switchSection('universities-section', this)">Universites</button>
+        <button class="menu-btn" onclick="switchSection('applications-section', this)">My Applications</button>
+        <button class="menu-btn" onclick="switchSection('appointments-section', this)">Rendez-vous</button>
+        <button class="menu-btn" onclick="switchSection('documents-section', this)">Documents</button>
+        <button class="menu-btn" onclick="switchSection('profile-section', this)">Mon Profil</button>
+        <button class="menu-btn admin-only" onclick="switchSection('influencers-section', this)" style="display:none">Influenceurs</button>
+        <button class="menu-btn admin-only" onclick="switchSection('users-section', this)" style="display:none">Utilisateurs</button>
+        <button class="logout-btn" id="logout-btn">Deconnexion</button>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <div>
+                <h2>Bonjour, <span id="user-name"></span></h2>
+                <p>Role: <span id="user-role"></span></p>
+            </div>
+            <div class="topbar-right">
+                <div class="notif-wrapper">
+                    <button class="notif-btn" id="notif-btn" onclick="toggleNotifications()">
+                        &#128276;
+                        <span class="notif-badge" id="notif-badge">0</span>
+                    </button>
+                    <div class="notif-dropdown" id="notif-dropdown">
+                        <div class="notif-header">
+                            <span>Notifications</span>
+                            <button onclick="markAllRead()">Tout marquer lu</button>
+                        </div>
+                        <div id="notif-list"></div>
+                    </div>
+                </div>
+                <div class="user-badge" id="user-badge-btn" style="cursor:pointer" title="Mon profil">
+                    <div class="user-avatar" id="user-initial">W</div>
+                    <span id="user-name-small" style="font-size:13px;font-weight:600;color:var(--navy)"></span>
+                </div>
+            </div>
+        </header>
+
+        <section class="kpi-grid">
+            <div class="kpi"><span>Total leads</span><strong id="kpi-total">0</strong></div>
+            <div class="kpi"><span>Admissions</span><strong id="kpi-admissions">0</strong></div>
+            <div class="kpi"><span>Visas obtenus</span><strong id="kpi-visas">0</strong></div>
+            <div class="kpi"><span>Departs</span><strong id="kpi-departs">0</strong></div>
+            <div class="kpi"><span>Conversion</span><strong id="kpi-conversion">0%</strong></div>
+        </section>
+
+        <section id="leads-section" class="app-section active">
+            <div class="section-card">
+                <h3>Nouveau lead</h3>
+                <div class="form-grid" id="lead-form">
+                    <div><label>Nom et prenom</label><input id="lead-full-name" type="text" placeholder="Ahmed Ben Ali"></div>
+                    <div><label>Telephone</label><input id="lead-phone" type="text" placeholder="+216 XX XXX XXX"></div>
+                    <div><label>WhatsApp</label><input id="lead-whatsapp" type="text" placeholder="+216 XX XXX XXX"></div>
+                    <div><label>Email</label><input id="lead-email" type="email" placeholder="email@example.com"></div>
+                    <div><label>Niveau d'etudes</label>
+                        <select id="lead-study-level">
+                            <option value="">-- Choisir --</option>
+                            <option value="Bac">Bac</option>
+                            <option value="Bac+2">Bac+2</option>
+                            <option value="Licence">Licence</option>
+                            <option value="Master">Master</option>
+                            <option value="Doctorat">Doctorat</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+                    <div><label>Moyenne</label>
+                        <select id="lead-average">
+                            <option value="">-- Choisir --</option>
+                            <option value="< 10">&lt; 10</option>
+                            <option value="10 - 12">10 - 12</option>
+                            <option value="12 - 14">12 - 14</option>
+                            <option value="14 - 16">14 - 16</option>
+                            <option value="> 16">&gt; 16</option>
+                        </select>
+                    </div>
+                    <div><label>Budget (EUR)</label>
+                        <select id="lead-budget">
+                            <option value="">-- Choisir --</option>
+                            <option value="2000">&lt; 3000</option>
+                            <option value="4000">3000 - 5000</option>
+                            <option value="6500">5000 - 8000</option>
+                            <option value="10000">&gt; 8000</option>
+                        </select>
+                    </div>
+                    <div><label>Destination souhaitee</label><select id="lead-destination"></select></div>
+                    <div><label>Specialite</label>
+                        <input id="lead-speciality" type="text" list="speciality-options" placeholder="Informatique" autocomplete="off">
+                        <datalist id="speciality-options">
+                            <option value="Informatique"></option>
+                            <option value="Ingenierie"></option>
+                            <option value="Medecine / Sante"></option>
+                            <option value="Business / Gestion"></option>
+                            <option value="Droit"></option>
+                            <option value="Arts / Design"></option>
+                            <option value="Tourisme / Hotellerie"></option>
+                            <option value="Autre"></option>
+                        </datalist>
+                    </div>
+                    <div><label>Source</label>
+                        <select id="lead-source">
+                            <option value="">-- Choisir --</option>
+                            <option value="Formulaire web">Formulaire web</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="TikTok">TikTok</option>
+                            <option value="WhatsApp">WhatsApp</option>
+                            <option value="Influenceur">Influenceur</option>
+                            <option value="Recommandation">Recommandation</option>
+                            <option value="Salon / Evenement">Salon / Evenement</option>
+                            <option value="Appel entrant">Appel entrant</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+                    <div><label>CA estime (EUR)</label><input id="lead-revenue" type="number" min="0" step="100" placeholder="1200"></div>
+                    <div class="full-row"><label>Notes internes</label><textarea id="lead-notes" placeholder="Details utiles pour le conseiller"></textarea></div>
+                    <div class="full-row"><button id="add-lead-btn" class="form-btn" type="button">Enregistrer le lead</button></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="pipeline-section" class="app-section">
+            <div class="section-card">
+                <h3>Pipeline des etudiants</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Lead</th>
+                                <th>Contact</th>
+                                <th>Projet</th>
+                                <th>Source</th>
+                                <th>Conseiller</th>
+                                <th>Statut</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leads-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="universities-section" class="app-section">
+            <div class="section-card">
+                <div class="section-actions">
+                    <h3>Universites partenaires</h3>
+                    <div>
+                        <button id="toggle-uni-form-btn" class="form-btn admin-only" type="button" style="display:none">+ Ajouter</button>
+                        <button id="cancel-uni-form-btn" class="danger-btn admin-only" type="button" style="display:none">Annuler</button>
+                    </div>
+                </div>
+                <div id="uni-form" class="uni-form">
+                    <div class="form-grid">
+                        <div><label>Nom universite</label><input id="uni-name" type="text" placeholder="Ex: University of Malta"></div>
+                        <div><label>Ville</label><input id="uni-city" type="text" placeholder="Valletta"></div>
+                        <div><label>Pays</label><select id="uni-country"></select></div>
+                        <div><label>Site web</label><input id="uni-website" type="url" placeholder="https://..."></div>
+                        <div><label>Domaine</label><input id="uni-domain" type="text" placeholder="Business, IT..."></div>
+                        <div><label>Niveau</label><input id="uni-degree" type="text" placeholder="Licence, Master"></div>
+                        <div><label>Langue</label><input id="uni-language" type="text" placeholder="Anglais"></div>
+                        <div><label>Frais / an €</label><input id="uni-fee" type="number" min="0" step="100" placeholder="3000"></div>
+                        <div class="full-row"><label>Programmes</label><textarea id="uni-programs" placeholder="Programmes disponibles"></textarea></div>
+                        <div class="full-row"><label>Conditions admission</label><textarea id="uni-conditions" placeholder="Conditions d'admission"></textarea></div>
+                        <div class="full-row"><label>Documents requis</label><textarea id="uni-documents" placeholder="Passeport, diplomes..."></textarea></div>
+                        <div><label>Dates limites</label><input id="uni-deadlines" type="text" placeholder="31 Mai 2026"></div>
+                        <div><label><input id="uni-scholarship" type="checkbox"> Bourse disponible</label></div>
+                        <div><label><input id="uni-guaranteed" type="checkbox"> Admission garantie</label></div>
+                        <div class="full-row"><label>Notes internes</label><textarea id="uni-notes" placeholder="Notes internes"></textarea></div>
+                        <div class="full-row"><button id="add-uni-btn" class="form-btn" type="button">Enregistrer l'universite</button></div>
+                    </div>
+                </div>
+                <div class="filters">
+                    <input id="search-uni" type="text" placeholder="Rechercher par nom, ville ou programme..." oninput="filterUniversities()">
+                    <select id="filter-country" onchange="filterUniversities()"></select>
+                    <select id="filter-language" onchange="filterUniversities()"></select>
+                    <select id="filter-degree" onchange="filterUniversities()"></select>
+                    <select id="filter-scholarship" onchange="filterUniversities()">
+                        <option value="">Bourse: tout</option>
+                        <option value="true">Avec bourse</option>
+                        <option value="false">Sans bourse</option>
+                    </select>
+                </div>
+                <div id="universities-grid" class="grid"></div>
+            </div>
+        </section>
+
+        <section id="documents-section" class="app-section">
+            <div class="section-card">
+                <h3>Gestion documentaire</h3>
+                <div class="form-grid" style="margin-bottom:20px">
+                    <div>
+                        <label>Selectionner un lead</label>
+                        <select id="doc-lead-select" onchange="onDocLeadChange()">
+                            <option value="">-- Choisir un lead --</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="doc-panel" style="display:none">
+                    <div class="form-grid" style="margin-bottom:20px;padding:16px;background:rgba(9,107,120,0.03);border-radius:8px;border:1px solid rgba(9,107,120,0.1)">
+                        <div>
+                            <label>Fichier</label>
+                            <input id="doc-file" type="file" style="padding:8px;font-size:13px">
+                        </div>
+                        <div>
+                            <label>Type de document</label>
+                            <select id="doc-type"></select>
+                        </div>
+                        <div style="display:flex;align-items:end">
+                            <button id="upload-doc-btn" class="form-btn" type="button">Uploader</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fichier</th>
+                                    <th>Type</th>
+                                    <th>Date upload</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="doc-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="applications-section" class="app-section">
+            <div class="section-card">
+                <div class="app-status-bar" id="app-status-bar"></div>
+                <div class="app-toolbar">
+                    <input type="search" id="app-search" placeholder="Rechercher etudiant, programme, universite..." oninput="renderApplications()">
+                    <span class="app-count" id="app-count"></span>
+                    <button class="app-add-btn" onclick="openAppModal()">+ Nouvelle candidature</button>
+                </div>
+                <div style="overflow-x:auto">
+                    <table class="apps-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Etudiant</th>
+                                <th>Universite</th>
+                                <th>Programme</th>
+                                <th>Annee</th>
+                                <th>Statut</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="app-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="profile-section" class="app-section">
+            <div class="section-card">
+                <h3>Mon Profil</h3>
+                <div style="display:grid;grid-template-columns:280px 1fr;gap:24px;align-items:start">
+                    <div style="text-align:center;padding:20px;border:1px solid #f1f3f5;border-radius:var(--radius);background:#fafbfc">
+                        <div class="user-avatar" id="profile-avatar" style="width:80px;height:80px;font-size:28px;margin:0 auto 12px"></div>
+                        <h3 id="profile-name-display" style="margin:0 0 4px"></h3>
+                        <p style="color:var(--text-muted);font-size:13px;margin:0 0 16px">Role: <span id="profile-role-display"></span></p>
+                        <p style="font-size:13px;margin:4px 0"><strong>Email:</strong> <span id="profile-email-display"></span></p>
+                    </div>
+                    <div>
+                        <div class="form-grid">
+                            <div><label>Nom complet</label><input id="profile-name-input" type="text"></div>
+                            <div><label>Mot de passe</label><input id="profile-password-input" type="password" placeholder="Laisser vide pour conserver"></div>
+                            <div><label>Confirmer mot de passe</label><input id="profile-confirm-password-input" type="password" placeholder="Confirmer"></div>
+                            <div class="full-row"><label>Votre lien de formulaire</label><div style="display:flex;gap:8px"><input id="account-link" type="text" readonly><button id="copy-account-link-btn" class="danger-btn" type="button">Copier</button></div></div>
+                            <div class="full-row"><div class="qr-card"><strong>QR code de votre formulaire</strong><div id="account-qr"></div><button id="download-account-qr-btn" class="danger-btn" type="button">Telecharger le QR code</button></div></div>
+                            <div class="full-row"><button id="save-profile-btn" class="form-btn" type="button">Enregistrer</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="influencers-section" class="app-section">
+            <div class="section-card">
+                <div class="section-actions">
+                    <h3>Gestion des influenceurs</h3>
+                    <button id="toggle-inf-form-btn" class="form-btn" type="button">+ Ajouter</button>
+                </div>
+                <div id="inf-form" style="display:none;margin-bottom:20px;padding:20px;border:1px solid rgba(9,107,120,0.12);border-radius:var(--radius);background:rgba(9,107,120,0.02)">
+                    <h3 style="margin-bottom:16px">Nouvel influenceur</h3>
+                    <div class="form-grid">
+                        <div><label>Nom complet</label><input id="inf-name-input" type="text" placeholder="Influenceur Demo"></div>
+                        <div><label>Email</label><input id="inf-email-input" type="email" placeholder="influencer@example.com"></div>
+                        <div><label>Mot de passe</label><input id="inf-password-input" type="text" placeholder="Mot de passe"></div>
+                        <div><label>Code promo</label><input id="inf-promo-input" type="text" placeholder="promo2024"></div>
+                        <div><label>Taux commission (%)</label><input id="inf-rate-input" type="number" min="0" step="0.5" placeholder="10"></div>
+                        <div style="display:flex;align-items:end;gap:8px">
+                            <button id="save-inf-btn" class="form-btn" type="button">Enregistrer</button>
+                            <button id="cancel-inf-btn" class="danger-btn" type="button">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Code promo</th>
+                                <th>Taux</th>
+                                <th>Actif</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inf-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="users-section" class="app-section">
+            <div class="section-card">
+                <div class="section-actions">
+                    <h3>Gestion des utilisateurs</h3>
+                    <button id="toggle-user-form-btn" class="form-btn" type="button">+ Ajouter</button>
+                </div>
+                <div id="user-form" style="display:none;margin-bottom:20px;padding:20px;border:1px solid rgba(9,107,120,0.12);border-radius:var(--radius);background:rgba(9,107,120,0.02)">
+                    <h3 style="margin-bottom:16px" id="user-form-title">Nouvel utilisateur</h3>
+                    <div class="form-grid">
+                        <div><label>Nom complet</label><input id="user-name-input" type="text" placeholder="Sonia Conseillere"></div>
+                        <div><label>Email</label><input id="user-email-input" type="email" placeholder="sonia@welearn.com"></div>
+                        <div><label>Mot de passe</label><input id="user-password-input" type="text" placeholder="Mot de passe"></div>
+                        <div><label>Role</label><select id="user-role-input">
+                            <option value="conseiller">Conseiller</option>
+                            <option value="admin">Administrateur</option>
+                        </select></div>
+                        <div style="display:flex;align-items:end;gap:8px">
+                            <button id="save-user-btn" class="form-btn" type="button">Enregistrer</button>
+                            <button id="cancel-user-btn" class="danger-btn" type="button">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Actif</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="appointments-section" class="app-section">
+                <div class="section-card">
+                    <div class="section-actions" style="flex-wrap:wrap">
+                        <h3>Rendez-vous</h3>
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <input id="apt-filter-date" type="date" onchange="loadAppointments()">
+                            <select id="apt-filter-status" onchange="loadAppointments()">
+                                <option value="">Tous statuts</option>
+                                <option value="prévu">Prévu</option>
+                                <option value="confirmé">Confirmé</option>
+                                <option value="annulé">Annulé</option>
+                                <option value="réalisé">Réalisé</option>
+                            </select>
+                            <button class="form-btn" type="button" onclick="openAppointmentModal()">+ Nouveau RDV</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date / Heure</th>
+                                    <th>Lead</th>
+                                    <th>Type / Lieu</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="appointments-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+    <div class="app-modal-overlay" id="app-modal">
+        <div class="app-modal">
+            <div class="app-modal-header">
+                <h3 id="app-modal-title">Nouvelle candidature</h3>
+                <button class="app-modal-close" onclick="closeAppModal()">&times;</button>
+            </div>
+            <div class="app-modal-body">
+                <input type="hidden" id="af-id">
+                <div class="app-form-row">
+                    <div class="app-form-group">
+                        <label>Etudiant</label>
+                        <input id="af-student" placeholder="Nom complet">
+                    </div>
+                    <div class="app-form-group">
+                        <label>Email</label>
+                        <input id="af-email" type="email" placeholder="email@exemple.com">
+                    </div>
+                </div>
+                <div class="app-form-row">
+                    <div class="app-form-group">
+                        <label>Telephone</label>
+                        <input id="af-phone" placeholder="+216 ...">
+                    </div>
+                    <div class="app-form-group">
+                        <label>WhatsApp</label>
+                        <input id="af-whatsapp" placeholder="+216 ...">
+                    </div>
+                </div>
+                <div class="app-form-row">
+                    <div class="app-form-group">
+                        <label>Universite</label>
+                        <input id="af-uni" placeholder="Nom de l'universite" list="app-uni-list">
+                        <datalist id="app-uni-list"></datalist>
+                    </div>
+                    <div class="app-form-group">
+                        <label>Programme</label>
+                        <input id="af-program" placeholder="Ex: Computer Engineering">
+                    </div>
+                </div>
+                <div class="app-form-row">
+                    <div class="app-form-group">
+                        <label>Annee academique</label>
+                        <input id="af-year" placeholder="2025-2026">
+                    </div>
+                    <div class="app-form-group">
+                        <label>Statut</label>
+                        <select id="af-status"></select>
+                    </div>
+                </div>
+                <div class="app-form-group">
+                    <label>Notes internes</label>
+                    <textarea id="af-notes" placeholder="Remarques..."></textarea>
+                </div>
+            </div>
+            <div class="app-modal-footer">
+                <button class="app-cancel-btn" onclick="closeAppModal()">Annuler</button>
+                <button class="app-save-btn" onclick="saveApplication()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="uni-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" type="button" onclick="closeUniModal()">x</button>
+            <div id="modal-body-content"></div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+        <div class="modal-content" style="width:min(460px,100%)">
+            <button class="close-modal" type="button" onclick="closeConfirmModal()">x</button>
+            <h3 id="confirm-modal-title">Confirmation</h3>
+            <p id="confirm-modal-message"></p>
+            <div class="modal-actions">
+                <button class="danger-btn" type="button" onclick="closeConfirmModal()">Annuler</button>
+                <button id="confirm-modal-submit" class="form-btn" type="button">Confirmer</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="status-action-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="status-action-title">
+        <div class="modal-content" style="width:min(480px,100%)">
+            <button class="close-modal" type="button" onclick="closeStatusActionModal()">x</button>
+            <h3 id="status-action-title">Changer le statut</h3>
+            <p id="status-action-message" style="color:var(--text-muted)"></p>
+            <div class="status-options">
+                <label class="status-option">
+                    <input id="status-send-email" type="checkbox">
+                    <div class="status-option-card">
+                        <div class="icon email"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M4 7l8 7 8-7"/></svg></div>
+                        <div class="title">Email</div>
+                        <div class="sub">Envoyer par email</div>
+                    </div>
+                </label>
+                <label class="status-option">
+                    <input id="status-send-whatsapp" type="checkbox">
+                    <div class="status-option-card">
+                        <div class="icon whatsapp"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.1 4.9A9.9 9.9 0 0 0 12 2a9.9 9.9 0 0 0-8.6 14.9L2 22l5.2-1.4A9.9 9.9 0 0 0 12 22a9.9 9.9 0 0 0 7.1-17.1zM12 20a8.3 8.3 0 0 1-4.2-1.1l-.3-.2-3.1.8.8-3-.2-.3A8.3 8.3 0 0 1 12 3.7 8.3 8.3 0 0 1 19 12a8.3 8.3 0 0 1-7 8zm4.7-6.1c-.3-.1-1.6-.8-1.9-.9s-.4-.1-.6.1-.7.9-.9 1c-.1.2-.3.2-.5.1s-.9-.3-1.7-1a6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.4.1-.5l.5-.6.2-.4c.1-.2 0-.3 0-.5l-.8-2c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.7.7-.7 1.7s.7 2 1 2.4c.2.3 1.4 2.1 3.5 2.9.5.2.9.3 1.2.4.5.1.9.1 1.2.1.4 0 1.2-.5 1.4-1 .2-.5.2-.9.1-1 0-.1-.3-.2-.5-.3z"/></svg></div>
+                        <div class="title">WhatsApp</div>
+                        <div class="sub">Envoyer sur WhatsApp</div>
+                    </div>
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button class="danger-btn" type="button" onclick="closeStatusActionModal()">Annuler</button>
+                <button class="form-btn" type="button" onclick="confirmStatusAction()">Confirmer</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="lead-edit-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="lead-edit-title">
+        <div class="modal-content">
+            <button class="close-modal" type="button" onclick="closeLeadEditModal()">x</button>
+            <h3 id="lead-edit-title">Modifier le lead</h3>
+            <div class="form-grid">
+                <div><label>Nom complet</label><input id="edit-lead-full-name" type="text"></div>
+                <div><label>Telephone</label><input id="edit-lead-phone" type="tel"></div>
+                <div><label>Email</label><input id="edit-lead-email" type="email"></div>
+                <div><label>Niveau d'etudes</label><input id="edit-lead-study-level" type="text"></div>
+                <div><label>Destination</label><input id="edit-lead-destination" type="text"></div>
+                <div><label>Specialite</label><input id="edit-lead-speciality" type="text"></div>
+                <div><label>Source</label><input id="edit-lead-source" type="text"></div>
+                <div class="full-row"><label>Notes</label><textarea id="edit-lead-notes"></textarea></div>
+            </div>
+            <div class="modal-actions">
+                <button class="danger-btn" type="button" onclick="closeLeadEditModal()">Annuler</button>
+                <button class="form-btn" type="button" onclick="saveLeadEdit()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="appointment-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="apt-modal-title">
+        <div class="modal-content">
+            <button class="close-modal" type="button" onclick="closeAppointmentModal()">x</button>
+            <h3 id="apt-modal-title">Nouveau rendez-vous</h3>
+            <div class="form-grid">
+                <div><label>Lead *</label><select id="apt-lead"></select></div>
+                <div><label>Titre</label><input id="apt-title" type="text" placeholder="Rendez-vous"></div>
+                <div><label>Date *</label><input id="apt-date" type="date"></div>
+                <div><label>Heure *</label><input id="apt-time" type="time"></div>
+                <div><label>Durée (min)</label><input id="apt-duration" type="number" min="15" step="15" value="60"></div>
+                <div><label>Type</label><select id="apt-type"><option value="présentiel">Présentiel</option><option value="appel">Appel</option><option value="visio">Visio</option><option value="autre">Autre</option></select></div>
+                <div><label>Lieu</label><input id="apt-location" type="text" placeholder="Bureau / lien visio"></div>
+                <div><label>Statut</label><select id="apt-status"><option value="prévu">Prévu</option><option value="confirmé">Confirmé</option><option value="annulé">Annulé</option><option value="réalisé">Réalisé</option></select></div>
+                <div class="full-row"><label>Notes</label><textarea id="apt-notes" placeholder="Détails..."></textarea></div>
+            </div>
+            <div class="modal-actions">
+                <button class="danger-btn" type="button" onclick="closeAppointmentModal()">Annuler</button>
+                <button class="form-btn" type="button" onclick="saveAppointment()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="qrcode-local.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

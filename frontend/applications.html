@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Learn CRM - My Applications</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-light: rgb(241, 208, 106);
+            --gold: rgb(212, 175, 55);
+            --gold-dark: rgb(196, 148, 72);
+            --teal: rgb(9, 107, 120);
+            --teal-dark: rgb(0, 55, 60);
+            --teal-mid: rgb(1, 74, 78);
+            --navy: rgb(9, 36, 58);
+            --white: #ffffff;
+            --bg: #f0f2f5;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --shadow: 0 4px 24px rgba(9, 36, 58, 0.08);
+            --shadow-lg: 0 12px 40px rgba(9, 36, 58, 0.14);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+        }
+        button, input, select { font: inherit; }
+
+        .topbar {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--teal-dark) 100%);
+            color: var(--white);
+            padding: 18px 32px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 20px rgba(9, 36, 58, 0.2);
+        }
+        .topbar h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .back-btn {
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--white);
+            cursor: pointer;
+            padding: 9px 18px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+        .back-btn:hover {
+            background: rgba(241, 208, 106, 0.15);
+            border-color: var(--gold);
+            color: var(--gold-light);
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 32px; }
+
+        .status-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        .status-btn {
+            border: none;
+            border-radius: 20px;
+            padding: 7px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--white);
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0.85;
+        }
+        .status-btn:hover { opacity: 1; transform: translateY(-1px); }
+        .status-btn.active { opacity: 1; box-shadow: 0 2px 12px rgba(0,0,0,0.2); transform: translateY(-1px); }
+        .status-btn[data-color="gray"] { background: #94a3b8; }
+        .status-btn[data-color="teal"] { background: #36c6d3; }
+        .status-btn[data-color="blue"] { background: #3b82f6; }
+        .status-btn[data-color="green"] { background: #22c55e; }
+        .status-btn[data-color="red"] { background: #ef4444; }
+        .status-btn[data-color="darkred"] { background: #7f1d1d; }
+        .status-btn[data-color="total"] { background: linear-gradient(135deg, var(--teal), var(--teal-dark)); }
+        .status-btn[data-color="yellow"] { background: #eab308; }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card-toolbar {
+            padding: 16px 24px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .card-toolbar input[type="search"] {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition);
+        }
+        .card-toolbar input[type="search"]:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+        }
+        .count {
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .add-btn {
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+            color: var(--white);
+            cursor: pointer;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 13px;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .add-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(9, 107, 120, 0.3); }
+
+        .apps-table { width: 100%; border-collapse: collapse; }
+        .apps-table th {
+            text-align: left;
+            padding: 12px 16px;
+            color: var(--teal);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e2e8f0;
+            white-space: nowrap;
+        }
+        .apps-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+        }
+        .apps-table tr:hover td { background: rgba(241, 208, 106, 0.06); }
+        .apps-table .id-col { font-weight: 700; color: var(--teal); }
+        .apps-table .student-name { font-weight: 600; color: var(--navy); }
+        .apps-table .date { color: var(--text-muted); font-size: 13px; white-space: nowrap; }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--white);
+            white-space: nowrap;
+        }
+        .status-badge.pending_review { background: #94a3b8; }
+        .status-badge.awaiting_conditional_acceptance, .status-badge.awaiting_payment,
+        .status-badge.awaiting_final_acceptance, .status-badge.awaiting_student_card { background: #36c6d3; }
+        .status-badge.conditional_acceptance, .status-badge.paid, .status-badge.free_scholarship,
+        .status-badge.complete_student_papers { background: #3b82f6; }
+        .status-badge.final_acceptance, .status-badge.completed { background: #22c55e; }
+        .status-badge.invalid, .status-badge.refused, .status-badge.already_registered,
+        .status-badge.paid_another { background: #ef4444; }
+        .status-badge.refund_request, .status-badge.refunded, .status-badge.freeze { background: #7f1d1d; }
+
+        .empty { text-align: center; color: var(--text-muted); padding: 48px; }
+
+        .actions {
+            display: flex;
+            gap: 6px;
+        }
+        .icon-btn {
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            padding: 6px 10px;
+            font-size: 12px;
+            transition: var(--transition);
+        }
+        .icon-btn.edit { background: rgba(9, 107, 120, 0.1); color: var(--teal); }
+        .icon-btn.edit:hover { background: rgba(9, 107, 120, 0.2); }
+        .icon-btn.delete { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .icon-btn.delete:hover { background: rgba(239, 68, 68, 0.2); }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            width: 95%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 { margin: 0; font-size: 18px; color: var(--navy); }
+        .close-btn {
+            border: none;
+            background: none;
+            font-size: 22px;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 4px;
+        }
+        .modal-body { padding: 24px; }
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+        }
+        .form-group textarea { resize: vertical; min-height: 70px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+        .save-btn {
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            color: var(--navy);
+            cursor: pointer;
+            padding: 10px 24px;
+            font-weight: 700;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+        .save-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3); }
+        .cancel-btn {
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            background: var(--white);
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+        .cancel-btn:hover { background: #f8fafc; }
+
+        @media print {
+            .topbar, .card-toolbar, .add-btn, .actions { display: none !important; }
+            .container { max-width: 100%; padding: 0; }
+            .apps-table th { background: var(--teal-dark); color: #fff; }
+        }
+        @media (max-width: 768px) {
+            .container { padding: 16px; }
+            .topbar { padding: 14px 16px; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <button class="back-btn" onclick="window.location.href='dashboard.html'">&larr; Retour</button>
+        <h1>We Learn CRM</h1>
+    </header>
+
+    <main class="container">
+        <div class="status-bar" id="status-bar"></div>
+
+        <div class="card">
+            <div class="card-toolbar">
+                <input type="search" id="search" placeholder="Rechercher etudiant, programme, universite..." oninput="render()">
+                <span class="count" id="count"></span>
+                <button class="add-btn" onclick="openModal()">+ Nouvelle candidature</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="apps-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Etudiant</th>
+                            <th>Universite</th>
+                            <th>Programme</th>
+                            <th>Annee</th>
+                            <th>Statut</th>
+                            <th>Creates le</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Nouvelle candidature</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="form-id">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Etudiant</label>
+                        <input id="form-student" placeholder="Nom complet">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input id="form-email" type="email" placeholder="email@exemple.com">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Telephone</label>
+                        <input id="form-phone" placeholder="+216 ...">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp</label>
+                        <input id="form-whatsapp" placeholder="+216 ...">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Universite</label>
+                        <input id="form-uni" placeholder="Nom de l'universite" list="uni-list">
+                        <datalist id="uni-list"></datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Programme</label>
+                        <input id="form-program" placeholder="Ex: Computer Engineering">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Annee academique</label>
+                        <input id="form-year" placeholder="2025-2026">
+                    </div>
+                    <div class="form-group">
+                        <label>Statut</label>
+                        <select id="form-status"></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Notes internes</label>
+                    <textarea id="form-notes" placeholder="Remarques..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="cancel-btn" onclick="closeModal()">Annuler</button>
+                <button class="save-btn" onclick="save()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="applications.js"></script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Learn CRM - Universite</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-light: rgb(241, 208, 106);
+            --gold: rgb(212, 175, 55);
+            --gold-dark: rgb(196, 148, 72);
+            --teal: rgb(9, 107, 120);
+            --teal-dark: rgb(0, 55, 60);
+            --teal-mid: rgb(1, 74, 78);
+            --navy: rgb(9, 36, 58);
+            --white: #ffffff;
+            --bg: #f0f2f5;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --shadow: 0 4px 24px rgba(9, 36, 58, 0.08);
+            --shadow-lg: 0 12px 40px rgba(9, 36, 58, 0.14);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+        }
+        button, input, select { font: inherit; }
+
+        .topbar {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--teal-dark) 100%);
+            color: var(--white);
+            padding: 18px 32px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 4px 20px rgba(9, 36, 58, 0.2);
+        }
+        .topbar h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .back-btn {
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: var(--radius-sm);
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--white);
+            cursor: pointer;
+            padding: 9px 18px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: var(--transition);
+        }
+        .back-btn:hover {
+            background: rgba(241, 208, 106, 0.15);
+            border-color: var(--gold);
+            color: var(--gold-light);
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 32px; }
+
+        .uni-hero {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 24px;
+            border-top: 4px solid var(--gold);
+            overflow: hidden;
+        }
+        .uni-banner {
+            height: 190px;
+            background-size: cover;
+            background-position: center;
+            background-color: var(--navy);
+            position: relative;
+        }
+        .uni-banner::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(9, 36, 58, 0.05) 0%, rgba(9, 36, 58, 0.45) 100%);
+        }
+        .uni-hero-body {
+            padding: 0 32px 28px;
+            position: relative;
+        }
+        .uni-logo-wrap {
+            width: 116px;
+            height: 116px;
+            margin-top: -58px;
+            margin-bottom: 14px;
+            background: var(--white);
+            border-radius: 20px;
+            border: 1px solid rgba(9, 36, 58, 0.08);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        .uni-logo-wrap img { max-width: 84%; max-height: 84%; object-fit: contain; }
+        .uni-hero h2 { margin: 0 0 6px; font-size: 26px; color: var(--teal-dark); font-weight: 800; }
+        .uni-hero .sub { color: var(--text-muted); font-size: 14px; margin-bottom: 16px; }
+        .uni-hero .sub a { color: var(--teal); text-decoration: none; }
+        .uni-hero .sub a:hover { text-decoration: underline; }
+        .badges { display: flex; flex-wrap: wrap; gap: 8px; }
+        .badge {
+            display: inline-block;
+            background: rgba(9, 107, 120, 0.08);
+            color: var(--teal);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge.gold { background: rgba(212, 175, 55, 0.15); color: var(--gold-dark); }
+
+        .section-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .section-card::before {
+            content: "";
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold-light), var(--gold), var(--gold-dark));
+        }
+        .section-card h3 { margin: 4px 0 16px; color: var(--teal-dark); font-size: 16px; }
+
+        .uni-description {
+            color: var(--text);
+            font-size: 14.5px;
+            line-height: 1.75;
+        }
+        .uni-description p { margin: 0 0 12px; }
+        .uni-description p:last-child { margin-bottom: 0; }
+        .uni-description img { max-width: 100%; border-radius: var(--radius-sm); }
+
+        .toolbar { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+        .toolbar input[type="search"] {
+            flex: 1;
+            min-width: 220px;
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            outline: none;
+            transition: var(--transition);
+        }
+        .toolbar input[type="search"]:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); }
+        .toolbar select {
+            padding: 10px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            background: var(--white);
+            outline: none;
+        }
+        .count {
+            padding: 10px 14px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .programs-table { width: 100%; border-collapse: collapse; }
+        .programs-table th {
+            text-align: left;
+            padding: 10px 12px;
+            color: var(--teal);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .programs-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 14px;
+        }
+        .programs-table tr:hover td { background: rgba(241, 208, 106, 0.06); }
+        .programs-table .fee { font-weight: 700; color: var(--gold-dark); white-space: nowrap; }
+        .programs-table .lang { color: var(--text-muted); font-size: 13px; }
+        .empty { text-align: center; color: var(--text-muted); padding: 32px; }
+
+        .export-btn {
+            border: 0;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            color: var(--navy);
+            cursor: pointer;
+            padding: 10px 20px;
+            font-weight: 700;
+            font-size: 13px;
+            transition: var(--transition);
+            box-shadow: 0 2px 10px rgba(212, 175, 55, 0.3);
+        }
+        .export-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4); }
+
+        @media print {
+            body { background: #fff; }
+            .topbar, .toolbar, .export-btn { display: none !important; }
+            .container { max-width: 100%; padding: 0; }
+            .uni-hero, .section-card { box-shadow: none; border-radius: 0; margin-bottom: 16px; }
+            .programs-table th { background: #095b68; color: #fff; }
+            .programs-table tr { page-break-inside: avoid; }
+            .info-grid { grid-template-columns: repeat(3, 1fr); }
+            .section-card::before { display: none; }
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .info-item {
+            background: rgba(9, 107, 120, 0.04);
+            border: 1px solid rgba(9, 107, 120, 0.08);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+        }
+        .info-item .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px; }
+        .info-item .value { font-weight: 600; color: var(--teal-dark); font-size: 14px; }
+
+        @media (max-width: 768px) {
+            .container { padding: 16px; }
+            .topbar { padding: 14px 16px; }
+            .programs-table { font-size: 13px; }
+            .uni-banner { height: 120px; }
+            .uni-hero-body { padding: 0 18px 20px; }
+            .uni-logo-wrap { width: 92px; height: 92px; margin-top: -46px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <button class="back-btn" onclick="window.location.href='dashboard.html'">&larr; Retour</button>
+        <h1>We Learn CRM</h1>
+    </header>
+
+    <main class="container">
+        <section class="uni-hero" id="uni-hero">
+            <div class="uni-banner" id="uni-banner"></div>
+            <div class="uni-hero-body">
+                <div class="uni-logo-wrap">
+                    <img id="uni-logo" alt="Logo" />
+                </div>
+                <h2 id="uni-name">Chargement...</h2>
+                <div class="sub" id="uni-sub">...</div>
+                <div class="badges" id="uni-badges"></div>
+            </div>
+        </section>
+
+        <section class="section-card" id="desc-card" style="display: none;">
+            <h3>Description</h3>
+            <div class="uni-description" id="uni-description"></div>
+        </section>
+
+        <div class="info-grid" id="uni-info"></div>
+
+        <section class="section-card">
+            <h3>Programmes</h3>
+            <div class="toolbar">
+                <input type="search" id="search-program" placeholder="Rechercher un programme..." oninput="renderPrograms()">
+                <select id="filter-degree" onchange="renderPrograms()">
+                    <option value="">Tous les niveaux</option>
+                    <option value="Bachelor">Bachelor</option>
+                    <option value="Master">Master</option>
+                    <option value="Associate">Associate</option>
+                </select>
+                <select id="filter-lang" onchange="renderPrograms()">
+                    <option value="">Toutes les langues</option>
+                    <option value="English">English</option>
+                    <option value="Turkish">Turkish</option>
+                    <option value="Nonthesis">Nonthesis</option>
+                </select>
+                <span class="count" id="programs-count"></span>
+                <button class="export-btn" onclick="exportToPdf()" title="Exporter tous les programmes en PDF">&#11015; Exporter en PDF</button>
+            </div>
+            <table class="programs-table">
+                <thead>
+                    <tr>
+                        <th>Programme</th>
+                        <th>Niveau</th>
+                        <th>Duree</th>
+                        <th>Langue</th>
+                        <th>Frais (an)</th>
+                    </tr>
+                </thead>
+                <tbody id="programs-body"></tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="university.js"></script>
+</body>
+</html>
